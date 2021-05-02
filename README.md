@@ -33,3 +33,6 @@ cd Style-Transfer-with-Target-Feature-Palette-and-Attention-Coloring
 
 #### Model Training
 #### Use a Pre-trained Model
+
+## Acknowledgement
+Our implementation is based on [pytorch-AdaIN](https://github.com/naoto0804/pytorch-AdaIN).
