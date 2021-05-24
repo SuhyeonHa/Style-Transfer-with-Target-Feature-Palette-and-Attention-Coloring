@@ -15,7 +15,6 @@ from function import denorm, denorm_device, tensor2im
 from torch.optim import Adam
 
 import net
-from sampler import InfiniteSamplerWrapper
 import visdom
 
 cudnn.benchmark = True
@@ -174,8 +173,14 @@ if __name__ == '__main__':
     #################################################
 
     for itr in range(args.max_iter):
-        content_images = next(content_iter).to(device)
-        style_images = next(style_iter).to(device)
+        try:
+            content_images = next(content_iter).to(device)
+            style_images = next(style_iter).to(device)
+        except StopIteration:
+            content_iter = iter(data.DataLoader(content_dataset, batch_size=args.batch_size, shuffle=True))
+            style_iter = iter(data.DataLoader(style_dataset, batch_size=args.batch_size, shuffle=True))
+            content_images = next(content_iter).to(device)
+            style_images = next(style_iter).to(device)
 
         loss_c, loss_s = network(content_images, style_images, args)
 

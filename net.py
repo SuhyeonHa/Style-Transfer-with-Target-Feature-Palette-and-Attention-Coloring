@@ -208,16 +208,16 @@ class Net(nn.Module):
 
         for b in range(batch_size):
             patches = patch_group[b, :, :, :, :]
-            s = patches.reshape(N, -1)
+            s = patches.reshape(N, -1) # s:[num_sample, patch_size*patch_size*C]
             km = KMeans(n_clusters=num_cluster)
             clustering = km.fit(s)
             y_pred = clustering.labels_
 
             num_sample = len(y_pred)
-            selected_patch = torch.zeros(3, 512, patch_size, patch_size)
+            selected_patch = torch.zeros(3, 512, patch_size, patch_size) # centroid or centroid-nearest patch
             for i in range(num_cluster):
-                d = km.fit_transform(s)[:, i]
-                ind = np.argsort(d)[::][:50]
+                d = km.fit_transform(s)[:, i] # [num_sample, num_cluster][:, i]
+                ind = np.argsort(d)[:50]
                 selected_patch[i] = patches[ind[0]]
 
             groups.append(list())
